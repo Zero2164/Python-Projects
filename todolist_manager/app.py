@@ -18,8 +18,7 @@ trello_api_key = config('TRELLO_API_KEY', '')
 assert trello_api_key, 'TRELLO_API_KEY not set!'  # debugging api_key status
 # api token defined in operation system variables
 trello_api_token = config('TRELLO_API_TOKEN', '')
-assert trello_api_key, 'TRELLO_API_TOKEN not set!'  # debugging api_key status
-
+assert trello_api_token, 'TRELLO_API_TOKEN not set!'  # debugging api_key status
 
 # ------TRELLO API---------
 # api url
@@ -38,71 +37,68 @@ todoist_api_url = 'https://api.todoist.com/rest/v1/tasks?token='+todoist_api_key
 # accepts 'due' param string which is a due-date(imported from 'TodoistAPI')
 # also accepts a boolean value -> if this param is specified it will only return the response code for debugging purposes
 def get_todoist_tasks(due, res_code=False):
-    try:
-        # get tasks request to TodoistAPI component requesting to filter by duedate
-        todoist_tasks = todoist_api.get_tasks(filter=due)
-        # get todoist api_url and store response code in variable for debugging purposes
-        todoist_res_code = requests.get(todoist_api_url)
-        if res_code:
-            return todoist_res_code
+    # get tasks request to TodoistAPI component requesting to filter by duedate
+    todoist_tasks = todoist_api.get_tasks(filter=due)
+    # get todoist api_url and store response code in variable for debugging purposes
+    todoist_res_code = requests.get(todoist_api_url)
+
+    if res_code:
+        return todoist_res_code
+    else:
+        # if an empty project list is returned, return False
+        if todoist_tasks == []:
+            return False
+        # # else the project list for today's todos is returned
         else:
-            # if an empty project list is returned, return False
-            if todoist_tasks == []:
-                return False
-            # # else the project list for today's todos is returned
-            else:
-                return todoist_tasks
-    except Exception as error:
-        wrt_file(error)
+            return todoist_tasks
+
 
 # ---------ARCHIVE TASKS FUNCTION---------
 # define custom 'archive_tasks' function to archive all Trello tasks in the specific Trello list before POST function
 
 
 def archive_tasks():
-    try:
-        # trello list/cards endpoint
-        trello_endpnt = '/lists/62e76990eea21e6558161fb9/archiveAllCards'
-        # full GET url pointing to the api list/{listID}/cards endpoint to obtain a list of all cards in Trello list
-        trello_list_cards_url = trello_api_url+trello_endpnt
+    # trello list/cards endpoint
+    trello_endpnt = '/lists/62e76990eea21e6558161fb9/archiveAllCards'
+    # full GET url pointing to the api list/{listID}/cards endpoint to obtain a list of all cards in Trello list
+    trello_list_cards_url = trello_api_url+trello_endpnt
 
-        # query the trello lists/{id}/archiveAllCards endpoint
-        query = {
-            'key': trello_api_key,
-            'token': trello_api_token
-        }
+    # query the trello lists/{id}/archiveAllCards endpoint
+    query = {
+        'key': trello_api_key,
+        'token': trello_api_token
+    }
 
-        # make a post request to the endpoint with the above query
-        requests.post(trello_list_cards_url, params=query)
-    except Exception as error:
-        wrt_file(error)
-
-
+    # make a post request to the endpoint with the above query
+    response = requests.post(trello_list_cards_url, params=query)
+    assert 200 <= response.status_code < 400, 'Failed to archive_tasks, ERROR: '+response.text
+    return response
 # ---------POST TASKS FUNCTION---------
 # define custom 'post_tasks' function to accept task_name and label from get_tasks function and create cards on the Trello board
+
+
 def post_tasks(task_name, label):
-    try:
-        # trello cards endpoint
-        trello_endpnt = '/cards'
-        # full POST url pointing to the api /cards endpoint to create the cards
-        trello_cards_url = trello_api_url+trello_endpnt
+    # trello cards endpoint
+    trello_endpnt = '/cards'
+    # full POST url pointing to the api /cards endpoint to create the cards
+    trello_cards_url = trello_api_url+trello_endpnt
 
-        # query the trello /cards endpoint
-        query = {
-            'idList': '62e76990eea21e6558161fb9',
-            'key': trello_api_key,
-            'token': trello_api_token,
-            'name': task_name,
-            'idLabels': label
-        }
-        # json response object creating a trello card with the parameter values specified in the query
-        requests.post(trello_cards_url, params=query)
-    except Exception as error:
-        wrt_file(error)
-
-
+    # query the trello /cards endpoint
+    query = {
+        'idList': '62e76990eea21e6558161fb9',
+        'key': trello_api_key,
+        'token': trello_api_token,
+        'name': task_name,
+        'idLabels': label
+    }
+    # json response object creating a trello card with the parameter values specified in the query
+    response = requests.post(trello_cards_url, params=query)
+    assert 200 <= response.status_code < 400, 'Failed to post_tasks, ERROR: '+response.text
+    return response
 # ---------OUTPUT FILE FUNCTION---------
 # define custom 'wrt_file' function to accept string and write to external file
+
+
 def wrt_file(text):
     # open the external file and write to the file
     with open('../../../../OneDrive/output.txt', 'w') as external_file:
