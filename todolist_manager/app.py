@@ -1,24 +1,23 @@
 # ---------IMPORTED COMPONENTS---------
 # define imports for required functions in script
 import requests
-import os
 from hashlib import new
 from todoist_api_python.api import TodoistAPI
-
+from decouple import config
 
 # ---------ENVIRONMENT VARS---------
 # TODOIST_ENVs
 # api key defined in operating system variables
-todoist_api_key = os.environ.get('TODO_API_KEY', '')
+todoist_api_key = config('TODO_API_KEY', '')
 # debugging api_key status
 assert todoist_api_key, 'TODO_API_KEY not set!'
 
 # TRELLO_ENVs
 # api key defined in operating system variables
-trello_api_key = os.environ.get('TRELLO_API_KEY', '')
+trello_api_key = config('TRELLO_API_KEY', '')
 assert trello_api_key, 'TRELLO_API_KEY not set!'  # debugging api_key status
 # api token defined in operation system variables
-trello_api_token = os.environ.get('TRELLO_API_TOKEN', '')
+trello_api_token = config('TRELLO_API_TOKEN', '')
 assert trello_api_key, 'TRELLO_API_TOKEN not set!'  # debugging api_key status
 
 
@@ -106,7 +105,7 @@ def post_tasks(task_name, label):
 # define custom 'wrt_file' function to accept string and write to external file
 def wrt_file(text):
     # open the external file and write to the file
-    with open('/Users/kylelamont/Documents/OneDrive/output.txt', 'w') as external_file:
+    with open('../../../../OneDrive/output.txt', 'w') as external_file:
         # print string to the external file
         print(text, file=external_file)
         # save and close the external file
