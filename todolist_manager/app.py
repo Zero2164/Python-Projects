@@ -1,10 +1,8 @@
 # ---------IMPORTED COMPONENTS---------
 # define imports for required functions in script
 import requests
-from hashlib import new
-from todoist_api_python.api import TodoistAPI
 from decouple import config
-
+from todoist_api_python.api import TodoistAPI
 # ---------ENVIRONMENT VARS---------
 # TODOIST_ENVs
 # api key defined in operating system variables
@@ -29,21 +27,23 @@ trello_api_url = 'https://api.trello.com/1'
 # imported TodoistAPI component
 todoist_api = TodoistAPI(todoist_api_key)
 # inserting api_key var into Todoist api_url
-todoist_api_url = 'https://api.todoist.com/rest/v1/tasks?token='+todoist_api_key
-
+todoist_api_url = 'https://api.todoist.com/rest/v2/tasks?token='+todoist_api_key
 
 # ---------GET TODOIST TASKS FUNCTION---------
 # define custom 'get_todoist_tasks' function to obtain the tasks from Todoist
 # accepts 'due' param string which is a due-date(imported from 'TodoistAPI')
 # also accepts a boolean value -> if this param is specified it will only return the response code for debugging purposes
+
+
 def get_todoist_tasks(due, res_code=False):
     # get tasks request to TodoistAPI component requesting to filter by duedate
     todoist_tasks = todoist_api.get_tasks(filter=due)
     # get todoist api_url and store response code in variable for debugging purposes
-    todoist_res_code = requests.get(todoist_api_url)
-
+    response = requests.get(todoist_api_url)
+    assert 200 <= response.status_code < 400, 'Failed to reach todoist api, ERROR: ' + \
+        response.text
     if res_code:
-        return todoist_res_code
+        return response
     else:
         # if an empty project list is returned, return False
         if todoist_tasks == []:
