@@ -26,8 +26,8 @@ trello_api_url = 'https://api.trello.com/1'
 # ------TODOIST API---------
 # imported TodoistAPI component
 todoist_api = TodoistAPI(todoist_api_key)
-# inserting api_key var into Todoist api_url
-todoist_api_url = 'https://api.todoist.com/rest/v2/tasks?token='+todoist_api_key
+# Todoist site URL
+todoist_url = 'https://todoist.com/'
 
 # ---------GET TODOIST TASKS FUNCTION---------
 # define custom 'get_todoist_tasks' function to obtain the tasks from Todoist
@@ -39,18 +39,17 @@ def get_todoist_tasks(due, res_code=False):
     # get tasks request to TodoistAPI component requesting to filter by duedate
     todoist_tasks = todoist_api.get_tasks(filter=due)
     # get todoist api_url and store response code in variable for debugging purposes
-    response = requests.get(todoist_api_url)
-    assert 200 <= response.status_code < 400, 'Failed to reach todoist api, ERROR: ' + \
-        response.text
+    response = requests.get(todoist_url)
+    assert 200 <= response.status_code < 400, 'Failed to reach todoist, ERROR: ' + response.text
+
     if res_code:
-        return response
+        return response.status_code
+    # if an empty project list is returned, return False
+    if todoist_tasks == []:
+        return False
+    # # else the project list for today's todos is returned
     else:
-        # if an empty project list is returned, return False
-        if todoist_tasks == []:
-            return False
-        # # else the project list for today's todos is returned
-        else:
-            return todoist_tasks
+        return todoist_tasks
 
 
 # ---------ARCHIVE TASKS FUNCTION---------
@@ -120,8 +119,6 @@ def main_app(sick_day=False, clear_tasks=False):
     trello_label_today = ['62e7967dc8e1c38fa2332360']
     # get the todoist tasks object
     todoist_task_obj = get_todoist_tasks('(today | overdue)')
-    # get the todoist response object
-    todoist_res_obj = get_todoist_tasks('(today | overdue)', True)
 
     # if the clear_tasks param is set to True, archive all Trello cards in the list
     if clear_tasks:
@@ -131,10 +128,10 @@ def main_app(sick_day=False, clear_tasks=False):
         # if the sick_day param is NOT set, proceed with running the below code
         if not sick_day:
             # if the get_todoist_tasks function returns false, meaning no tasks were returned from the request, the below string is outputted to the output.txt file
-            if not todoist_task_obj:
+            if not todoist_task_obj or isinstance(todoist_task_obj, int):
                 archive_tasks()
-                wrt_file(
-                    'Oops someone forgot to add tasks the todo list...'+str(todoist_res_obj))
+                wrt_file('Oops someone forgot to add tasks the todo list... Todoist URL Response Code: ' +
+                         str(get_todoist_tasks('(today | overdue)', True)))
             # if there is a JSON object with values the main code executes
             else:
                 # ADDITIONAL VARIABLES FOR MAIN_APP FUNCTION
