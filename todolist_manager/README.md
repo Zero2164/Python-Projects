@@ -10,7 +10,7 @@
 
 <h2><strong>How it Works:</strong></h2>
 <p>
-    This script will first check for parameters, such as; is there existing tasks to-do, is there an issue returning the Todoist task? Then once all passed, the function proceeds to archive all existing Trello Cards within a specific list ID and POST the outstanding Todoist tasks to Trello, creating a Trello Card for each outstanding Todoist task with the specified Trello List.  
+    This script will first check if there are existing tasks to-do, is there an issue returning the Todoist task? Then once all passed, the function proceeds to archive all existing Trello Cards within a specific list ID and POST the outstanding Todoist tasks to Trello, creating a Trello Card for each outstanding Todoist task with the specified Trello List.  
     <br>
     <br>
     Additionally, I have today’s tasks from Todoist written to an output file formatted in a nice morning greeting, which is automatically synced by my One Drive each morning. 
