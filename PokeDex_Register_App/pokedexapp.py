@@ -131,19 +131,6 @@ def pokedex_registrar(pokmon_name, registered_pokemon):
             console_output(pokemon_name, registered_pokemon,
                            pokemon_exists, -1)
 
-            # if pokemon_name in item['Name']:
-            #     pokemon_exists = True
-            #     console_output(pokemon_name, registered_pokemon,
-            #                    pokemon_exists, -1)
-            #     break
-            # else:
-            #     print(item)
-            #     register_new_pokemon(
-            #         registered_pokemon, chosen_pokemon, pokemon_id, pokemon_name, pokemon_img)
-            #     console_output(pokemon_name, registered_pokemon,
-            #                    pokemon_exists, -1)
-            #     break
-
 
 def open_pokedex(pokedex_name):
     selected_pokedex_file = Path(

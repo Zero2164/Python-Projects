@@ -1,6 +1,7 @@
 # ---------IMPORTED COMPONENTS---------
 # define imports for required functions in script
 import requests
+import random
 from decouple import config
 from todoist_api_python.api import TodoistAPI
 # ---------ENVIRONMENT VARS---------
@@ -113,8 +114,10 @@ def wrt_file(text):
  # accepts clear_tasks boolean, which will ONLY archive all tasks then exit the script
 def main_app(sick_day=False, clear_tasks=False):
     # VARIABLES FOR MAIN_APP FUNCTION
+    team_synonyms = ['team', 'squad', 'troupe', 'gang', 'crew', 'comrades', 'allies', 'SOC bunch', 'SOC members', 'pals' ]
+    item = random.choice(tuple(team_synonyms))
     # Good morning text string, written to the start of the output file
-    good_morn_text = 'Good Morning Team! :sun: \n\n-----Todo\'s for today-----\n'
+    good_morn_text = 'Good Morning, '+item.capitalize()+'! :sun: \n\n-----Todo\'s for today-----\n'
     # trello label_ids
     trello_label_today = ['62e7967dc8e1c38fa2332360']
     # get the todoist tasks object
