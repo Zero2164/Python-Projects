@@ -43,17 +43,15 @@ Handy Notes:
   - At any point if you answer with 'q' it will quit the game
   - Yes OR No questions only, otherwise be disappointed :/ 
 
-----------------------------------------------------------------
-    """
+----------------------------------------------------------------"""
     )
 
 
 def goodbye(name):
     if name.lower() == "q" or not name:
-        print("\nThanks for playing!\n")
+        print("Thanks for playing!\n")
     else:
-        print(f"\nThanks for playing, {name}!\n")
-    print("----------------------------------------------------------------\n")
+        print(f"Thanks for playing, {name}!\n")
     time.sleep(2)
 
 
@@ -62,7 +60,7 @@ def ask_user(name):
     if name.lower() == "q":
         goodbye(name)
         return True
-    question = input("\nAsk a yes or no question: ")
+    question = input("Ask a yes or no question: ")
     if question.lower() == "q":
         goodbye(name)
         return True
@@ -71,16 +69,18 @@ def ask_user(name):
         return False
     else:
         answer = random.choice(answers_list)
+        print("\n----------------------------------------------------------------\n")
         if not name:
-            print(f"\n>> Question: {question}")
+            print(f">> Question: {question}")
         else:
-            print(f"\n>> {name}'s asks: {question}")
+            print(f">> {name}'s Question: {question}")
 
         print(f"\n>> MAGIC 8 BALL'S ANSWER: {answer['answer']}\n")
         print("----------------------------------------------------------------\n")
         final_question = input(
             "Shake the Magic8 ball and ask another question? (Y or N)? "
         )
+        print("\n----------------------------------------------------------------\n")
         if final_question.lower() == "y":
             return False
         else:
@@ -90,6 +90,6 @@ def ask_user(name):
 
 # ----OUTPUT----
 welcome()
-name = input("Whats your name? ")
+name = input("\nWhats your name? ")
 while not response:
     response = ask_user(name)
