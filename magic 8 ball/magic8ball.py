@@ -14,11 +14,14 @@ answers_list = [
     {"id": 7, "answer": "My sources say no"},
     {"id": 8, "answer": "Outlook not so good"},
     {"id": 9, "answer": "Very doubtful"},
+    {"id": 10, "answer": "Very unlikely"},
+    {"id": 11, "answer": "Maybe"},
+    {"id": 12, "answer": "Perhaps"},
 ]
 
 
 # ----FUNCTIONS----
-def welcome(name):
+def welcome():
     print(
         """
 ----------------Welcome to the Magic 8 Ball game!----------------
@@ -43,13 +46,11 @@ Handy Notes:
 ----------------------------------------------------------------
     """
     )
-    name = input("Whats your name? ") or "User"
-    return name
 
 
 def goodbye(name):
-    if name.lower() == "q":
-        print("\nThanks for playing, User!\n")
+    if name.lower() == "q" or not name:
+        print("\nThanks for playing!\n")
     else:
         print(f"\nThanks for playing, {name}!\n")
     print("----------------------------------------------------------------\n")
@@ -57,29 +58,24 @@ def goodbye(name):
 
 
 def ask_user(name):
+    final_question = None
     if name.lower() == "q":
         goodbye(name)
         return True
-    question = input("\nAsk a yes or no question: ") or "Nothing"
+    question = input("\nAsk a yes or no question: ")
     if question.lower() == "q":
         goodbye(name)
         return True
-    evaluation = name == "User" and question == "Nothing"
-    final_question = None
-    if evaluation:
-        print(
-            "You need to fill in your name and ask a question before the Magic8 Ball answers!\n"
-        )
-        return False
-    elif name == "User":
-        print("You need to fill in your name before the Magic8 Ball answers!\n")
-        return False
-    elif question == "Nothing":
+    if not question:
         print("You need to ask a question before the Magic8 Ball answers!\n")
         return False
     else:
         answer = random.choice(answers_list)
-        # print(f"\n>> {name}'s asks: '{question}' **while shaking the Magic8 ball..**")
+        if not name:
+            print(f"\n>> Question: {question}")
+        else:
+            print(f"\n>> {name}'s asks: {question}")
+
         print(f"\n>> MAGIC 8 BALL'S ANSWER: {answer['answer']}\n")
         print("----------------------------------------------------------------\n")
         final_question = input(
@@ -93,6 +89,7 @@ def ask_user(name):
 
 
 # ----OUTPUT----
-name = welcome(name)
+welcome()
+name = input("Whats your name? ")
 while not response:
     response = ask_user(name)
